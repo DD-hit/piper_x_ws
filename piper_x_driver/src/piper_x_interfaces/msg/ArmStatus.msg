@@ -1,0 +1,13 @@
+uint8 STARTING=0
+uint8 READY=1
+uint8 BUSY=2
+uint8 FAULT=3
+std_msgs/Header header
+string backend
+uint8 state
+bool enabled
+bool feedback_valid
+string owner
+string active_action
+MotionFeedback motion
+MotionResult last_result

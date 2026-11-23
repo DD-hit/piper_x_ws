@@ -1,0 +1,25 @@
+test.empty_motion:
+  kind: test
+  environments: [isaac]
+  entry: tests/empty_motion/main.py
+  description: 空载关节运动、TCP 上移和夹爪开合
+test.obstacle_avoidance:
+  kind: test
+  environments: [isaac]
+  entry: tests/obstacle_avoidance/main.py
+  description: 挡板碰撞前提检查与绕行验收
+test.cartesian_line:
+  kind: test
+  environments: [isaac]
+  entry: tests/cartesian_line/main.py
+  description: 绝对直线及基座和工具坐标系 XYZ 增量路径验收
+test.cartesian_arc:
+  kind: test
+  environments: [isaac]
+  entry: tests/cartesian_arc/main.py
+  description: 三点圆弧全过程路径误差验收
+test.fault_handling:
+  kind: test
+  environments: [isaac]
+  entry: tests/fault_handling/main.py
+  description: 控制权、失能、非法目标、规划失败、取消和恢复验收

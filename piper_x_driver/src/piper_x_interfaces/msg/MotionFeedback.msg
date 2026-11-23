@@ -1,0 +1,7 @@
+uint8 IDLE=0
+uint8 PREFLIGHT=1
+uint8 PLANNING=2
+uint8 EXECUTING=3
+uint8 VERIFYING=4
+uint8 STOPPING=5
+uint8 phase

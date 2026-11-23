@@ -1,0 +1,12 @@
+uint8 DIRECT=1
+uint8 AVOID_OBSTACLES=2
+uint8 motion_mode
+geometry_msgs/PoseStamped target
+float64 velocity_scale
+float64 acceleration_scale
+---
+MotionResult result
+float64 position_error_m
+float64 orientation_error_rad
+---
+MotionFeedback feedback

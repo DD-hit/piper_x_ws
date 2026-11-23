@@ -1,0 +1,8 @@
+float64[6] joint_positions_rad
+float64 velocity_scale
+float64 acceleration_scale
+---
+MotionResult result
+float64 max_joint_error_rad
+---
+MotionFeedback feedback

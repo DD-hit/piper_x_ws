@@ -1,0 +1,6 @@
+float64 opening_m
+---
+MotionResult result
+float64 actual_opening_m
+---
+MotionFeedback feedback

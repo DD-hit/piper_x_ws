@@ -1,0 +1,11 @@
+geometry_msgs/PoseStamped start
+geometry_msgs/PoseStamped via
+geometry_msgs/PoseStamped end
+float64 velocity_scale
+float64 acceleration_scale
+---
+MotionResult result
+float64 position_error_m
+float64 orientation_error_rad
+---
+MotionFeedback feedback

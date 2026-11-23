@@ -1,0 +1,13 @@
+/piper_x_driver/build/
+/piper_x_driver/install/
+/piper_x_driver/log/
+/piper_x_driver/.venv/
+/piper_x_driver/.runtime/
+/piper_x_driver/api/*.before-config.py
+/piper_x_tasks/tests/.runner_validation/
+logs/
+__pycache__/
+*.pyc
+*.etli
+.DS_Store
+._*
