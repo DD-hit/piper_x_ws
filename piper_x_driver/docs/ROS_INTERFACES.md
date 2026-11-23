@@ -15,4 +15,4 @@ ros2 topic echo /piper_x/status --once --qos-durability transient_local
 
 `status.owner` 为正在执行的任务名，`active_action` 为当前动作。手动动作只占用动作执行期间。`set_enabled` 控制 Isaac 运动许可。接口包变更后需要重新加载 driver 的构建环境。
 
-`move_j` 为直接关节目标，`move_p` 的 `AVOID_OBSTACLES` 使用 MoveIt；`DIRECT` 暂未实现。绝对位姿使用 `base_link`，直线与圆弧保持朝向。`move_t` 支持基座或工具坐标系下 XYZ 平移，`set_gripper` 以米表示开度。RViz、直接访问 MoveIt 或底层控制器的客户端仍可绕过本任务入口。真机后端尚未接入。
+`move_j` 为直接关节目标，`move_p` 的 `AVOID_OBSTACLES` 使用 MoveIt；`DIRECT` 对 TCP 目标求逆解后执行关节插值，不做场景绕障。绝对位姿使用 `base_link`，直线与圆弧保持朝向。`move_t` 支持基座或工具坐标系下 XYZ 平移，`set_gripper` 以米表示开度。MoveJ/P/L/C/T 均支持独立的速度与加速度比例，详见 [配置说明](CONFIGURATION.md)。RViz、直接访问 MoveIt 或底层控制器的客户端仍可绕过本任务入口。真机后端尚未接入。
