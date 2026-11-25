@@ -1,6 +1,6 @@
 # Driver 配置
 
-启动时读取 `config/driver.yaml`，或用环境变量 `PIPER_DRIVER_CONFIG` 指向完整配置文件。配置在启动时生效；修改后重启 driver。它不是任务参数文件，任务目标和验收门槛仍由独立任务管理。
+启动时读取 `src/piper_x_driver/config/driver.yaml`，或用环境变量 `PIPER_DRIVER_CONFIG` 指向完整配置文件。配置在启动时生效；修改后重启 driver。它不是任务参数文件，任务目标和验收门槛仍由独立任务管理。
 
 MoveJ/P/L/C/T 都接收 `velocity_scale` 与 `acceleration_scale`。零表示使用配置默认值；显式值必须位于 (0, 配置最大值]，NaN、无穷和越界请求拒绝。比例相对各关节模型限制，不是 TCP 的 m/s 或 m/s²。
 

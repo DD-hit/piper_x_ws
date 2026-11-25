@@ -1,5 +1,5 @@
 from geometry_msgs.msg import PoseStamped
-from native_client import Arm
+from piper_x_driver.native_client import Arm
 from piper_x_interfaces.action import MoveP, SetGripper
 from rclpy.action import ActionClient
 from std_srvs.srv import SetBool

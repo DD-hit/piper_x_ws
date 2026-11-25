@@ -51,7 +51,8 @@ def serve_child(service, connection, canceled, run_id):
 def run_task(service, handle):
     result = RunTask.Result()
     name = handle.request.name
-    root = Path(__file__).resolve().parents[2] / 'piper_x_tasks'
+    driver_root = Path(os.environ.get('PIPER_X_WS_ROOT', Path.cwd()))
+    root = Path(os.environ.get('PIPER_TASKS_ROOT', driver_root.parent / 'piper_x_tasks')).resolve()
     try:
         spec = yaml.safe_load((root / 'registry.yaml').read_text())[name]
         entry = (root / spec['entry']).resolve()
@@ -83,7 +84,6 @@ def run_task(service, handle):
         parent, child = socket.socketpair()
         env = dict(os.environ, PIPER_TASK_FD=str(child.fileno()), PIPER_TASK_NAME=name,
                    PIPER_TASK_ENV='isaac', PYTHONUNBUFFERED='1', PIPER_RUN_ID=run_id)
-        env['PYTHONPATH'] = str(Path(__file__).parent) + os.pathsep + env.get('PYTHONPATH', '')
         with path.open('x') as log:
             print(f'{name} {run_id}', file=log, flush=True)
             process = subprocess.Popen([sys.executable, str(entry)], cwd=entry.parent, env=env,

@@ -24,9 +24,9 @@ scripts/prepare_isaac_model.py 展开官方 xacro，为 Isaac 导入生成临时
 
 - scripts/run_isaac.sh：一键启动及会话退出，默认 Isaac 无界面，--rviz 打开 RViz。
 - scripts/run_isaac_scene.sh：隔离 Isaac Python 3.11 与 ROS 系统 Python 3.10。
-- sim/isaac/run_scene.py：官方 URDF 导入、固定基座、地面、光源、ROS 图。
-- sim/isaac/moveit.launch.py：复用官方 MoveIt 配置，按官方仿真示例切换 TopicBasedSystem；use_sim_time=true。
-- sim/isaac/joint_mapping.py：仅处理关节命名与官方夹指 mimic 映射，不实现规划或底层驱动。
+- src/piper_x_isaac/runtime/run_scene.py：官方 URDF 导入、固定基座、地面、光源、ROS 图。
+- src/piper_x_isaac/runtime/moveit.launch.py：复用官方 MoveIt 配置，按官方仿真示例切换 TopicBasedSystem；use_sim_time=true。
+- src/piper_x_isaac/runtime/joint_mapping.py：仅处理关节命名与官方夹指 mimic 映射，不实现规划或底层驱动。
 
 官方源码未改。新增内容为官方资源的部署配置和必要的 Isaac 连接脚本。
 

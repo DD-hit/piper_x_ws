@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<robot name="piper_x">
+  <disable_collisions link1="gemini_mount_bracket" link2="gripper_base" reason="Fixed mounting interface"/>
+  <disable_collisions link1="gemini_mount_bracket" link2="gemini_camera_link" reason="Fixed mounting interface"/>
+</robot>

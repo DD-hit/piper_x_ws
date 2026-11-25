@@ -12,9 +12,14 @@ for arg in "$@"; do
  case "$arg" in
   --rviz) RVIZ=true ;;
   --stream) STREAM_ARGS+=(--stream) ;;
+  wrist_attachment:=*) export PIPER_WRIST_ATTACHMENT="${arg#wrist_attachment:=}" ;;
   *) MOVEIT_ARGS+=("$arg") ;;
  esac
 done
+if [[ -n ${PIPER_WRIST_ATTACHMENT:-} && $PIPER_WRIST_ATTACHMENT != none && $PIPER_WRIST_ATTACHMENT != gemini336l ]]; then
+ echo "ERROR: Unsupported wrist_attachment: $PIPER_WRIST_ATTACHMENT" >&2
+ exit 2
+fi
 setsid bash scripts/run_isaac_scene.sh --headless "${STREAM_ARGS[@]}" > .runtime/isaac-scene.log 2>&1 &
 ISAAC_PID=$!
 MOVEIT_PID=

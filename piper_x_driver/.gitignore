@@ -5,3 +5,5 @@
 /.runtime/
 __pycache__/
 *.pyc
+/.colcon/
+/NvStreamer-*.etli

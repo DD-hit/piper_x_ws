@@ -11,11 +11,11 @@ from rclpy.node import Node
 from rclpy.qos import DurabilityPolicy, QoSProfile
 from std_srvs.srv import SetBool
 
-from motion import Motion, PlanningError
+from .motion import Motion, PlanningError
 from piper_x_interfaces.action import MoveC, MoveJ, MoveL, MoveP, MoveT, SetGripper
 from piper_x_interfaces.msg import ArmStatus, MotionFeedback, MotionResult
 from piper_x_interfaces.action import RunTask
-from task_runner import run_task
+from .task_runner import run_task
 
 
 class Service(Node):
@@ -122,7 +122,10 @@ class Service(Node):
                     result.max_joint_error_rad = motion.direct_joints(list(request.joint_positions_rad), request.velocity_scale)
                 elif kind is SetGripper:
                     phase(MotionFeedback.EXECUTING)
-                    result.actual_opening_m = motion.opening(request.opening_m)
+                    result.actual_opening_m, reached, closing = motion.opening(request.opening_m)
+                    result.outcome = (result.REACHED_TARGET if reached else
+                                      result.BLOCKED_CLOSING if closing else result.BLOCKED_OPENING)
+                    self.get_logger().info(f'Gripper outcome={result.outcome} opening={result.actual_opening_m:.4f} m')
                 else:
                     phase(MotionFeedback.PLANNING)
                     if kind is MoveT:

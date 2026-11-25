@@ -11,7 +11,7 @@ import uuid
 
 import rclpy
 from moveit_msgs.srv import GetPlanningScene, GetStateValidity
-from motion import Motion
+from .motion import Motion
 
 
 class Handler(socketserver.StreamRequestHandler):

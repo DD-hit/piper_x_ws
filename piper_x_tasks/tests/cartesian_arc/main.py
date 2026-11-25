@@ -7,7 +7,7 @@ from pathlib import Path
 import numpy as np
 import rclpy
 from geometry_msgs.msg import PoseStamped, Vector3Stamped
-from native_client import Arm
+from piper_x_driver.native_client import Arm
 from moveit_msgs.srv import GetPositionFK
 from piper_x_interfaces.action import MoveC, MoveP, MoveL, MoveT
 from scipy.spatial.transform import Rotation

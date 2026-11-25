@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="gemini336l_attachment">
+  <xacro:arg name="include_sensor_frames" default="true"/>
+  <xacro:property name="config" value="${xacro.load_yaml('../config/gemini_frames.json')}"/>
+
+  <xacro:macro name="gemini_frames" params="frames index optical">
+    <xacro:if value="${index &lt; len(frames)}">
+      <xacro:property name="frame" value="${frames[index]}"/>
+      <xacro:property name="name" value="${frame[0]}"/>
+      <xacro:if value="${optical or index &lt; 2}">
+        <link name="${name}">
+          <xacro:if value="${name == 'gemini_mount_bracket'}">
+            <visual><geometry><mesh filename="package://piper_x_description/meshes/gemini_bracket_collision.stl"/></geometry>
+              <material name="gemini_bracket"><color rgba="0.80 0.47 0.16 1"/></material>
+            </visual>
+            <collision><geometry><mesh filename="package://piper_x_description/meshes/gemini_bracket_collision.stl"/></geometry></collision>
+          </xacro:if>
+          <xacro:if value="${name == 'gemini_camera_link'}">
+            <visual><geometry><mesh filename="package://piper_x_description/meshes/gemini_camera_visual.stl"/></geometry>
+              <material name="gemini_camera"><color rgba="0.28 0.32 0.38 1"/></material>
+            </visual>
+            <collision>
+              <origin xyz="${' '.join(map(str, config.camera_box[0]))}" rpy="0 0 0"/>
+              <geometry><box size="${' '.join(map(str, config.camera_box[1]))}"/></geometry>
+            </collision>
+          </xacro:if>
+        </link>
+        <joint name="${name}_fixed_joint" type="fixed">
+          <parent link="${frame[1]}"/><child link="${name}"/>
+          <origin xyz="${' '.join(map(str, frame[2]))}" rpy="${' '.join(map(str, frame[3]))}"/>
+        </joint>
+      </xacro:if>
+      <xacro:gemini_frames frames="${frames}" index="${index + 1}" optical="${optical}"/>
+    </xacro:if>
+  </xacro:macro>
+  <xacro:gemini_frames frames="${config.frames}" index="${0}" optical="$(arg include_sensor_frames)"/>
+</robot>

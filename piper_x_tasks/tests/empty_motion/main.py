@@ -1,4 +1,4 @@
-from native_client import Arm
+from piper_x_driver.native_client import Arm
 from geometry_msgs.msg import Vector3Stamped
 from geometry_msgs.msg import PoseStamped
 from moveit_msgs.srv import GetPositionFK

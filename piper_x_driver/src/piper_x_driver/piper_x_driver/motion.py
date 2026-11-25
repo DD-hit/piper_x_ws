@@ -24,10 +24,13 @@ from tf2_ros import Buffer, TransformListener
 from trajectory_msgs.msg import JointTrajectoryPoint
 
 
+from ament_index_python.packages import get_package_share_directory
+
+
 class Motion(Node):
     def __init__(self):
         super().__init__('piper_x_motion_service')
-        config_path = Path(os.environ.get('PIPER_DRIVER_CONFIG', Path(__file__).resolve().parents[1] / 'config/driver.yaml'))
+        config_path = Path(os.environ.get('PIPER_DRIVER_CONFIG', Path(get_package_share_directory('piper_x_driver')) / 'config/driver.yaml'))
         self.config = yaml.safe_load(config_path.read_text())
         for key, value in self.config.items():
             if isinstance(value, bool) or not isinstance(value, (float, int)) or not math.isfinite(value) or value < 0:
@@ -37,7 +40,7 @@ class Motion(Node):
                 raise ValueError(f'Invalid scale {key}')
         if self.config['status_rate_hz'] <= 0 or self.config['cartesian_step_m'] <= 0:
             raise ValueError('Positive status rate and path step required')
-        limits_path = Path(__file__).resolve().parents[1] / 'src/agx_arm_ros/src/agx_arm_moveit/config/joint_limits.yaml'
+        limits_path = Path(get_package_share_directory('agx_arm_moveit')) / 'config/joint_limits.yaml'
         self.model_limits = yaml.safe_load(limits_path.read_text())['joint_limits']
         self.acceleration_scale = self.config['default_acceleration_scale']
         self.get_logger().info(f'Driver configuration: {config_path}')
@@ -333,15 +336,41 @@ class Motion(Node):
     def opening(self, width):
         if not self.config['min_opening_m'] <= width <= self.config['max_opening_m']:
             raise ValueError('夹爪开度范围 0 至 0.1 m')
+        initial_width = self.state['gripper']
         goal = FollowJointTrajectory.Goal()
         goal.trajectory.joint_names = ['gripper']
         point = JointTrajectoryPoint(positions=[width])
         point.time_from_start.sec = 2
         goal.trajectory.points = [point]
         self.action(self.gripper, goal)
-        self.until(lambda: abs(self.state['gripper'] - width) < self.config['opening_tolerance_m'], self.config['settle_timeout_s'])
-        self.get_logger().info(f"夹爪目标 {width:.3f} m，反馈 {self.state['gripper']:.4f} m")
-        return self.state['gripper']
+        self.report_phase(4)
+        previous = self.stamp
+        stable_since = None
+        minimum = maximum = 0.
+        reached = False
+
+        def settled():
+            nonlocal previous, stable_since, minimum, maximum, reached
+            if self.stamp == previous:
+                return False
+            prior_time = previous[0] + previous[1] * 1e-9
+            previous = self.stamp
+            stamp = self.stamp[0] + self.stamp[1] * 1e-9
+            opening = self.state['gripper']
+            reached = abs(opening - width) < self.config['opening_tolerance_m']
+            if reached:
+                return True
+            if (stable_since is None or not 0 < stamp - prior_time <= 0.25
+                    or max(maximum, opening) - min(minimum, opening) > 0.0005):
+                minimum = maximum = opening
+                stable_since = stamp
+            else:
+                minimum = min(minimum, opening)
+                maximum = max(maximum, opening)
+            return stamp - stable_since >= 1.0
+
+        self.until(settled, self.config['settle_timeout_s'])
+        return self.state['gripper'], reached, width < initial_width
 
     def ready(self):
         self.state.clear()

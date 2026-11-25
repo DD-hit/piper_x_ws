@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 3.8)
+project(piper_x_description)
+find_package(ament_cmake REQUIRED)
+install(DIRECTORY config meshes urdf DESTINATION share/${PROJECT_NAME})
+install(FILES robot_description.py DESTINATION share/${PROJECT_NAME})
+ament_package()

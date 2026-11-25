@@ -4,12 +4,14 @@
 
 ## 环境约定
 
-在本目录执行 `bash scripts/build.sh`。`scripts/env.sh` 加载 `/opt/ros/humble`、可选的 `.venv` 和本工作空间 `install`，避免混用 Conda 或其他 ROS 工作空间。
+在本目录执行 `bash scripts/build.sh`。`scripts/env.sh` 加载 `/opt/ros/humble`、可选的 `.venv` 和本工作空间 `.colcon/install`，避免混用 Conda 或其他 ROS 工作空间。
+
+项目源码在 `src/`。`piper_x_driver` 提供动作服务和任务客户端，`piper_x_interfaces` 定义接口，`piper_x_description` 提供仿真与真机可复用的模型，`piper_x_isaac` 提供 Isaac 的场景、配置和资源。启动入口在 `scripts/`，工作空间外层的 `piper_x_tasks` 保持独立。构建产物及运行状态分别位于 `.colcon/` 和 `.runtime/`。
 
 当前部署包含机器相关配置：
 
 - Isaac 安装路径在 `scripts/run_isaac_scene.sh` 中为 `/home/rl/isaacsim`。
-- GPU 在 `sim/isaac/run_scene.py` 中选择 GPU 1；需要对应硬件或调整配置。
+- GPU 在 `src/piper_x_isaac/runtime/run_scene.py` 中选择 GPU 1；需要对应硬件或调整配置。
 - 串流公布地址在同一场景脚本中配置；迁移服务器需修改。TCP 49100 和 UDP 47998 必须可达。
 - 仿真脚本使用 ROS 域 74、本机 ROS 通信；mock 演示默认域 73。
 - 项目 Python 环境需提供 colcon、PyYAML、NumPy、SciPy 和 ROS Python 依赖。真机 SDK 尚未作为执行后端部署。
@@ -55,7 +57,7 @@ ros2 topic echo /piper_x/status --once --qos-durability transient_local
 ros2 run tf2_ros tf2_echo base_link tcp_link
 ```
 
-比例参数相对关节模型限值；0 表示采用默认值。配置位于 `config/driver.yaml`，启动时加载。详见 [配置说明](docs/CONFIGURATION.md)。
+比例参数相对关节模型限值；0 表示采用默认值。配置位于 `src/piper_x_driver/config/driver.yaml`，启动时加载。详见 [配置说明](docs/CONFIGURATION.md)。
 
 状态 `0/1/2/3` 分别为 STARTING/READY/BUSY/FAULT。完整任务执行期间 `owner` 为任务名，手动动作时为空；判断忙碌应看 state，不能只看 owner。READY 不代替 enabled 检查。
 
