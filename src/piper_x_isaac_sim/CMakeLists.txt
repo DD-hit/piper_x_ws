@@ -1,0 +1,5 @@
+cmake_minimum_required(VERSION 3.8)
+project(piper_x_isaac_sim)
+find_package(ament_cmake REQUIRED)
+install(DIRECTORY runtime DESTINATION share/${PROJECT_NAME} PATTERN "__pycache__" EXCLUDE)
+ament_package()

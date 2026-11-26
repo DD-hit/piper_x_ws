@@ -4,10 +4,10 @@
 
 | 项目 | 职责 |
 | --- | --- |
-| [piper_x_driver](piper_x_driver/README.md) | ROS 2 接口、运动执行、MoveIt、Isaac、状态和故障处理 |
+| [ROS 2 源码](src/) | ROS 2 接口、运动执行、MoveIt、Isaac、状态和故障处理 |
 | [piper_x_tasks](piper_x_tasks/README.md) | 独立测试任务、注册表和任务提交入口；当前无正式业务任务 |
 
-外层是总工作目录。请在 `piper_x_driver` 内构建，不在外层统一执行 `colcon build`。
+在工作区根目录运行 `bash scripts/build.sh`。脚本构建 `src/` 和固定提交的 `vendor/agx_arm_ros`。
 
 ## 环境与获取
 
@@ -15,18 +15,18 @@
 
 ```bash
 git clone --recurse-submodules https://github.com/DD-hit/piper_x_ws.git
-cd piper_x_ws/piper_x_driver
+cd piper_x_ws
 bash scripts/build.sh
 ```
 
-已克隆但缺官方依赖时，在仓库根目录执行 `git submodule update --init --recursive`。子模块固定官方提交，不自动更新。当前启动脚本针对服务器环境配置，迁移机器前请检查 [driver 的环境说明](piper_x_driver/README.md#环境约定)。
+已克隆但缺官方依赖时，在仓库根目录执行 `git submodule update --init --recursive`。子模块固定官方提交，不自动更新。当前启动脚本针对服务器环境配置，迁移机器前请检查 [driver 的环境说明](docs/simulation.md#环境约定)。
 
 ## 快速使用
 
 以下命令按现有服务器路径编写。在远程桌面终端启动无挡板场景：
 
 ```bash
-cd /home/rl/workspace/piper_x_ws/piper_x_driver
+cd /home/rl/workspace/piper_x_ws
 PIPER_DEMO_BARRIER=0 bash scripts/run_isaac.sh --stream --rviz
 ```
 
@@ -70,8 +70,27 @@ driver 完整日志为 `.runtime/isaac-services.log`，Isaac 日志为 `.runtime
 
 ## 更多说明
 
-- [ROS 2 调用、任务锁与取消](piper_x_driver/docs/ROS_INTERFACES.md)
-- [速度、加速度和配置](piper_x_driver/docs/CONFIGURATION.md)
-- [运动契约与真机边界](piper_x_driver/docs/CONTRACT.md)
+- [ROS 2 调用、任务锁与取消](docs/ROS_INTERFACES.md)
+- [速度、加速度和配置](docs/CONFIGURATION.md)
+- [运动契约与真机边界](docs/CONTRACT.md)
 
 阶段记录用于追溯历史；当前用法以本 README 和上述接口文档为准。
+
+
+## 视觉抓取回归
+
+在工作区根目录运行：
+
+```bash
+source scripts/env.sh
+ros2 launch piper_x_bringup simulation.launch.py
+```
+
+等待 `ROS 2 task actions ready`，在另一个终端从根目录运行：
+
+```bash
+bash piper_x_tasks/run_isaac_task.sh run test.vision_pick_and_place
+```
+
+每轮测试前重置仿真。业务侧通过图像、CameraInfo 和 TF2 估计坐标，
+用 Isaac 遥测验证定位、抬升和最终落点。

@@ -1,0 +1,6 @@
+parent_frame: link6
+child_frame: gemini_camera_color_optical_frame
+transform_convention: parent_T_child
+translation_m: [0.0, 0.0, 0.0]
+quaternion_xyzw: [0.0, 0.0, 0.0, 1.0]
+source: replace-with-real-calibration-report

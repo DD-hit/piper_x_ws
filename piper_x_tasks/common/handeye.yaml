@@ -1,0 +1,4 @@
+# Runtime lookup is through TF2. This file documents the selected calibration profile.
+parent_frame: link6
+child_frame: gemini_camera_color_optical_frame
+calibration_source: piper_x_calibration/config/simulation/gemini_handeye.yaml

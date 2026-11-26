@@ -27,7 +27,7 @@ def main():
     joints = {}
     samples = []
     names = [f"joint{i}" for i in range(1,7)]
-    mirror_file = Path(__file__).resolve().parents[3] / 'piper_x_driver/.runtime/gemini-movep-fixture.json'
+    mirror_file = Path(__file__).resolve().parents[3] / '.runtime/gemini-movep-fixture.json'
 
     def show_fixture(pose, dimensions, pause):
         p, q = pose.position, pose.orientation

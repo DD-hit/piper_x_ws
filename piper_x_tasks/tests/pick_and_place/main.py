@@ -11,8 +11,14 @@ from piper_x_interfaces.action import MoveL, MoveP, SetGripper
 from rclpy.time import Time
 from tf2_ros import Buffer, TransformListener
 
-root = Path(__file__).resolve().parents[3] / 'piper_x_driver'
+root = Path(__file__).resolve().parents[3]
 reports = []
+scene_path = root / 'src/piper_x_isaac_sim/runtime/grasp_scene.json'
+scene_objects = json.loads(scene_path.read_text())['objects']
+initial_cube_x, initial_cube_y, _ = next(
+    obj['center'] for obj in scene_objects if obj['id'] == 'grasp_cube'
+)
+pick_x = initial_cube_x
 
 
 def telemetry():
@@ -35,13 +41,16 @@ def snapshot(stage):
 def target(y, z):
     pose = PoseStamped()
     pose.header.frame_id = 'base_link'
-    pose.pose.position.x, pose.pose.position.y, pose.pose.position.z = 0.35, y, z
+    pose.pose.position.x, pose.pose.position.y, pose.pose.position.z = pick_x, y, z
     pose.pose.orientation.x = 1.
     pose.pose.orientation.w = 0.
     return pose
 
 
 with Arm() as arm:
+    pick_y = initial_cube_y
+    if "locate_pick_target" in globals():
+        pick_x, pick_y = locate_pick_target(arm)
     transforms = Buffer()
     listener = TransformListener(transforms, arm.node)
 
@@ -85,14 +94,14 @@ with Arm() as arm:
         matrix.entry_values[other].enabled[index] = True
     update(scene)
     start = state()
-    if abs(start[0] - .35) > .01 or abs(start[1] + .08) > .01:
+    if abs(start[0] - initial_cube_x) > .01 or abs(start[1] - initial_cube_y) > .01:
         raise RuntimeError('Reset scene before each grasp attempt')
     opened = arm.run(SetGripper, 'set_gripper', opening_m=.08)
     if opened.outcome != opened.REACHED_TARGET:
         raise RuntimeError('Gripper opening obstructed before approach')
-    arm.run(MoveP, 'move_p', target=target(-.08, .28), motion_mode=MoveP.Goal.AVOID_OBSTACLES,
+    arm.run(MoveP, 'move_p', target=target(pick_y, .28), motion_mode=MoveP.Goal.AVOID_OBSTACLES,
             velocity_scale=.1, acceleration_scale=.1)
-    arm.run(MoveL, 'move_l', target=target(-.08, .235), velocity_scale=.1, acceleration_scale=.1)
+    arm.run(MoveL, 'move_l', target=target(pick_y, .235), velocity_scale=.1, acceleration_scale=.1)
     snapshot('before_close')
     grip = arm.run(SetGripper, 'set_gripper', opening_m=0.)
     if grip.outcome != grip.BLOCKED_CLOSING:
@@ -100,7 +109,7 @@ with Arm() as arm:
     snapshot('closed')
     time.sleep(2)
     snapshot('closed_hold')
-    arm.run(MoveL, 'move_l', target=target(-.08, .28), velocity_scale=.1, acceleration_scale=.1)
+    arm.run(MoveL, 'move_l', target=target(pick_y, .28), velocity_scale=.1, acceleration_scale=.1)
     time.sleep(.3)
     lifted = state()
     snapshot('lift')

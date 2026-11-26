@@ -34,3 +34,16 @@ test.pick_and_place:
   - isaac
   entry: tests/pick_and_place/main.py
   description: 已知方块位置的物理抓取和放置
+
+test.vision_localization:
+  kind: test
+  environments:
+  - isaac
+  entry: tests/vision_localization/main.py
+  description: OpenCV 蓝色目标定位与 TF2 平面投影
+test.vision_pick_and_place:
+  kind: test
+  environments:
+  - isaac
+  entry: tests/vision_pick_and_place/main.py
+  description: OpenCV 橙色方块定位、物理抓取与放置验收

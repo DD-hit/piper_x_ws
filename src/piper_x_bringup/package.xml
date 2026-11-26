@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>piper_x_bringup</name>
+  <version>0.1.0</version>
+  <description>PiPER-X deployment launch entry points.</description>
+  <maintainer email="dd@users.noreply.github.com">PiPER-X maintainers</maintainer>
+  <license>LicenseRef-Project</license>
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <exec_depend>launch</exec_depend>
+  <exec_depend>piper_x_control</exec_depend>
+  <exec_depend>piper_x_isaac_sim</exec_depend>
+  <exec_depend>piper_x_calibration</exec_depend>
+  <export><build_type>ament_cmake</build_type></export>
+</package>

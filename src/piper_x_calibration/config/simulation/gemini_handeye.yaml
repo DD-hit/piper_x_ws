@@ -1,0 +1,10 @@
+parent_frame: link6
+child_frame: gemini_camera_color_optical_frame
+transform_convention: parent_T_child
+translation_m: [-0.023982916972563446, -0.07016700445658161, 0.04293042374854404]
+quaternion_xyzw: [-0.17377467527554794, 0.0005468585703066846, -0.0020279593203966846, 0.9847831997752484]
+source: .runtime/handeye/wide-1795671275/report.yaml
+validation:
+  samples: 8
+  translation_rms_mm: 0.3961875702892785
+  rotation_rms_deg: 0.13958138581667836
