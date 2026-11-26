@@ -16,10 +16,12 @@
 ```bash
 git clone --recurse-submodules https://github.com/DD-hit/piper_x_ws.git
 cd piper_x_ws
+python3 -m venv --system-site-packages .venv
+bash scripts/install_isaac_deps.sh
 bash scripts/build.sh
 ```
 
-已克隆但缺官方依赖时，在仓库根目录执行 `git submodule update --init --recursive`。子模块固定官方提交，不自动更新。当前启动脚本针对服务器环境配置，迁移机器前请检查 [driver 的环境说明](docs/simulation.md#环境约定)。
+已克隆但缺官方依赖时，在仓库根目录执行 `git submodule update --init --recursive`。子模块固定官方提交，不自动更新。当前启动脚本针对服务器环境配置，迁移机器前请检查 [仿真环境说明](docs/simulation.md)。
 
 ## 快速使用
 
