@@ -1,0 +1,7 @@
+image_topic: /piper_x/camera/color/image_raw
+camera_info_topic: /piper_x/camera/color/camera_info
+base_frame: base_link
+wrist_frame: link6
+optical_frame: gemini_camera_color_optical_frame
+use_sim_time: true
+max_reprojection_px: 1.0

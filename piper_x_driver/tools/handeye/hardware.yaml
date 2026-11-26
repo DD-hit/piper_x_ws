@@ -1,0 +1,8 @@
+# Examples: adjust camera node namespace and frame to match the live Orbbec driver.
+image_topic: /camera/color/image_raw
+camera_info_topic: /camera/color/camera_info
+base_frame: base_link
+wrist_frame: link6
+optical_frame: camera_color_optical_frame
+use_sim_time: false
+max_reprojection_px: 1.0

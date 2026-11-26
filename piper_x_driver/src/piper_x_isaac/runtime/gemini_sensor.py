@@ -28,8 +28,10 @@ def add_gemini_sensors(stage, attachment):
     for stream,kind,topic in [('color','rgb','image_raw'),('depth','depth','image_rect_raw')]:
         frame=f'gemini_camera_{stream}_optical_frame'
         camera=UsdGeom.Camera.Define(stage,attachment.GetPath().AppendChild(stream.title()+'Sensor'))
-        # ROS optical +Z forward, +Y down. USD cameras look down -Z with +Y up.
-        matrix=transforms[frame]@np.diag([1,-1,-1,1])
+        # USD camera coordinates use -Z forward and +Y up. The ROS optical frame
+        # uses +Z forward and +Y down. Convert only the camera prim orientation.
+        optical_to_usd = np.diag([1., -1., -1., 1.])
+        matrix = transforms[frame] @ optical_to_usd
         camera.AddTransformOp().Set(Gf.Matrix4d(*matrix.T.ravel().tolist()))
         camera.CreateFocalLengthAttr(10.)
         camera.CreateHorizontalApertureAttr(20.)

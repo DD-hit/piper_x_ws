@@ -107,6 +107,9 @@ if gemini_enabled:
 elif os.environ.get('PIPER_WRIST_CAMERA') == '1':
  from wrist_camera import add_wrist_camera
  wrist_render_product = add_wrist_camera(stage)
+if os.environ.get('PIPER_HANDEYE_BOARD'):
+ from handeye_board import add_handeye_board
+ add_handeye_board(stage, os.environ['PIPER_HANDEYE_BOARD'])
 for _ in range(30):world.step(render=True)
 from isaacsim.core.utils.viewports import set_camera_view
 set_camera_view(eye=np.array([1.2,1.2,0.85]),target=np.array([0.,0.,0.35]))
